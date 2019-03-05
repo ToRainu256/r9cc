@@ -60,6 +60,49 @@ fn fail(tokens: &Vec<Token>, i: usize) {
     eprintln!("unexpected character: {:?}", tokens[i]);
     exit(1);
 }
+enum NodeType {
+    Num,
+}
+#[derive(Debug, Clone, Default)]
+struct Node {
+    ty: i32,
+    lhs: Option<Box<Node>>,
+    rhs: Option<Box<Node>>,
+    val: i32
+}
+
+impl Node  {
+
+   fn new(ty: i32, lhs: Box<Node>, rhs: Box<Node>)-> Self {
+      Self{
+          ty: ty,
+          lhs: Some(lhs),
+          rhs: Some(rhs),
+          ..Default::default()
+      } 
+   } 
+
+   fn new_num(val: i32)-> Self {
+      Self{
+          ty: NodeType::Num as i32,
+          val: val,
+          ..Default::default()
+      } 
+   }
+
+   fn consume(tokens: &Vec<Token>, pos: usize) -> bool {
+       if tokens[pos].ty == NodeType::Num as i32 {
+           let val = tokens[pos].val ; 
+           Self::new_num(val); 
+           return true;
+       }
+      panic!("number expected, but got {}", tokens[pos].input );
+   }
+
+    
+    
+
+}
 
 fn main() {
     //標準入力を受け取り、引数の個数をチェック
